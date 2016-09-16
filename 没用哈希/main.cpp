@@ -2,33 +2,33 @@
 #include <string.h>
 #include <stdlib.h>
 #include "time.h"
-#define HASH_LENGTH    1024               //¹şÏ£±íµÄ³¤¶È     
-#define RANDOM_NUMBER  47               //Ëæ»úÊı
+#define HASH_LENGTH    1024               //å“ˆå¸Œè¡¨çš„é•¿åº¦     
+#define RANDOM_NUMBER  47               //éšæœºæ•°
 
 clock_t start, finish;  
 double  duration;  
 typedef struct      
 {  
 	char id[10];
-	char py[15];    //Ãû×ÖµÄÆ´Òô
-	int k;       //Æ´ÒôËù¶ÔÓ¦µÄÕûÊı
+	char py[15];    //åå­—çš„æ‹¼éŸ³
+	int k;       //æ‹¼éŸ³æ‰€å¯¹åº”çš„æ•´æ•°
 }NAME;
 
-typedef struct    //¹şÏ£±í
+typedef struct    //å“ˆå¸Œè¡¨
 {   
 	char id[10];     // id
 	char py[15];     //name
-	int k;        //Æ´ÒôËù¶ÔÓ¦µÄÕûÊı
-	int si;       //²éÕÒ³¤¶È
+	int k;        //æ‹¼éŸ³æ‰€å¯¹åº”çš„æ•´æ•°
+	int si;       //æŸ¥æ‰¾é•¿åº¦
 }HASH;
 
-NAME g_NameList[HASH_LENGTH];    //È«¾Ö±äÁ¿NAME  
-HASH g_HashList[HASH_LENGTH];   //È«¾Ö±äÁ¿HASH 
+NAME g_NameList[HASH_LENGTH];    //å…¨å±€å˜é‡NAME  
+HASH g_HashList[HASH_LENGTH];   //å…¨å±€å˜é‡HASH 
 
-int g_num = 0;   // ¼ÇÂ¼µÄÊıÄ¿
+int g_num = 0;   // è®°å½•çš„æ•°ç›®
 
 //////////////////////////////////////////////////////////////////////////
-// ³õÊ¼»¯±íµÄÊı¾İ
+// åˆå§‹åŒ–è¡¨çš„æ•°æ®
 void InitNameList(char *file)    
 {   
 	char f[15] = {0};
@@ -39,7 +39,7 @@ void InitNameList(char *file)
 
 	if((fp=fopen(file,"r"))==NULL)
 	{ 
-		printf("ÎÄ¼ş´ò¿ªÊ§°Ü£¡\n");
+		printf("æ–‡ä»¶æ‰“å¼€å¤±è´¥ï¼\n");
 		return ;
 	}
 	else
@@ -78,13 +78,13 @@ void InitNameList(char *file)
 
 
 //////////////////////////////////////////////////////////////////////////
-//½¨Á¢¹şÏ£±í
+//å»ºç«‹å“ˆå¸Œè¡¨
 void CreateHashList()   
 { 
 	int i;
 	int sum, adr,d;
 
-	// ³õÊ¼»¯ g_hashList ÖĞµÄÊı¾İ
+	// åˆå§‹åŒ– g_hashList ä¸­çš„æ•°æ®
 	for(i=0; i< g_num; i++) 
 	{   
 		strcpy(g_HashList[i].py,"");
@@ -93,14 +93,14 @@ void CreateHashList()
 		g_HashList[i].si = 0;
 	}
 
-	// ½¨Á¢¹şÏ£±í
+	// å»ºç«‹å“ˆå¸Œè¡¨
 	for(i=0; i<g_num; i++)
 	{  
 		sum = 0;
 		adr = (g_NameList[i].k)%RANDOM_NUMBER;  
-		//¹şÏ£º¯Êı
+		//å“ˆå¸Œå‡½æ•°
 		d = adr;
-		if(g_HashList[adr].si == 0)     //Èç¹û²»³åÍ»
+		if(g_HashList[adr].si == 0)     //å¦‚æœä¸å†²çª
 		{ 
 			g_HashList[adr].k  = g_NameList[i].k;
 			strcpy(g_HashList[adr].py, g_NameList[i].py);
@@ -111,18 +111,18 @@ void CreateHashList()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// ¸ù¾İname ²éÕÒ¼ÇÂ¼   
+// æ ¹æ®name æŸ¥æ‰¾è®°å½•   
 void  FindList(char *name)
 {	
 	int s0=0,r,sum=1,adr,d;
 
 	int len = strlen(name);
 
-	//Çó³öĞÕÃûµÄÆ´ÒôËù¶ÔÓ¦µÄÕûÊı¹Ø¼ü×Ö
+	//æ±‚å‡ºå§“åçš„æ‹¼éŸ³æ‰€å¯¹åº”çš„æ•´æ•°å…³é”®å­—
 	for(r = 0; r < len; r ++)   
 		s0 += name[r]; 
 
-	//Ê¹ÓÃ¹şÏ£º¯Êı
+	//ä½¿ç”¨å“ˆå¸Œå‡½æ•°
 	adr = s0%RANDOM_NUMBER;  
 
 	d = adr;
@@ -133,20 +133,20 @@ void  FindList(char *name)
 	}
 	else if (g_HashList[adr].k == 0) 
 	{
-		printf("ÎŞ´Ë¼ÇÂ¼!\n");
+		printf("æ— æ­¤è®°å½•!\n");
 	}
 	else
 	{   
 		int g = 0;
 		do
 		{  
-			d = (d + s0%10 + 1)%RANDOM_NUMBER;       //Î±Ëæ»úÌ½²âÔÙÉ¢ÁĞ·¨´¦Àí³åÍ»
+			d = (d + s0%10 + 1)%RANDOM_NUMBER;       //ä¼ªéšæœºæ¢æµ‹å†æ•£åˆ—æ³•å¤„ç†å†²çª
 
 			sum=sum+1;
 
 			if(g_HashList[d].k == 0)
 			{  
-				printf("ÎŞ´Ë¼ÇÂ¼! \n");  
+				printf("æ— æ­¤è®°å½•! \n");  
 				g = 1;     
 			}	
 
@@ -164,7 +164,7 @@ void  FindList(char *name)
 
 
 //////////////////////////////////////////////////////////////////////////
-// ´´½¨±í
+// åˆ›å»ºè¡¨
 void Create(char * cmd)
 {
 	FILE * fp;
@@ -176,10 +176,10 @@ void Create(char * cmd)
 	int find = 0;
 	char ex[5] = {".txt"};
 
-	// ÃüÁîµÄ³¤¶È
+	// å‘½ä»¤çš„é•¿åº¦
 	len = strlen(cmd);
 
-	// ½âÎöÃüÁî£¬ »ñµÃÎÄ¼şÃû
+	// è§£æå‘½ä»¤ï¼Œ è·å¾—æ–‡ä»¶å
 	for(i = 0; i < len; i++)
 	{
 		if ('(' == cmd[i])
@@ -199,7 +199,7 @@ void Create(char * cmd)
 	j = i +2;
 	i = 0;
 
-	// ½âÎöÃüÁî£¬»ñµÃ  id µÄÖµ
+	// è§£æå‘½ä»¤ï¼Œè·å¾—  id çš„å€¼
 	for (j; j <len; j++, i++)
 	{
 		if(cmd[j] == '\"')
@@ -219,7 +219,7 @@ void Create(char * cmd)
 	i = 0;
 	find = 0;
 
-	// ½âÎöÃüÁî£¬»ñµÃ  name µÄÖµ
+	// è§£æå‘½ä»¤ï¼Œè·å¾—  name çš„å€¼
 	for (j; j <len; j++, i++)
 	{
 		if(cmd[j] == '\"')
@@ -237,28 +237,28 @@ void Create(char * cmd)
 
 	if((cmd[j+1] != ')') && ((cmd[j+2] != ';')))
 	{
-		printf("´íÎóÃüÁî £¡\n");
+		printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 		return;
 	}
 
-	// ´´½¨²¢´ò¿ªÎÄ¼ş£¬Ğ´ÈëÊı¾İ
+	// åˆ›å»ºå¹¶æ‰“å¼€æ–‡ä»¶ï¼Œå†™å…¥æ•°æ®
 	fp = fopen(fileName, "w");
 
 	if (fp)
 	{
-		printf("\n´´½¨±í³É¹¦\n");
+		printf("\nåˆ›å»ºè¡¨æˆåŠŸ\n");
 		fprintf(fp, "%s %s\n",id,name);
 
 		fclose(fp);
 	}
 	else
 	{
-		printf("\n´´½¨±íÊ§°Ü\n");
+		printf("\nåˆ›å»ºè¡¨å¤±è´¥\n");
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-// ²åÈë¼ÇÂ¼
+// æ’å…¥è®°å½•
 void Insert(char *file,char *cmd)
 {
 	FILE * fp;
@@ -275,14 +275,14 @@ void Insert(char *file,char *cmd)
 	fp = fopen(file,"r");
 	if (!fp)
 	{
-		printf(" ¸Ã±í²»´æÔÚ");
+		printf(" è¯¥è¡¨ä¸å­˜åœ¨");
 		return;
 	}
 	else
 	{
 		fclose(fp);
 
-		// ½âÎöÃüÁî£¬»ñµÃ ÎÄ¼şÃû
+		// è§£æå‘½ä»¤ï¼Œè·å¾— æ–‡ä»¶å
 		for(i = 0; i < len; i++)
 		{
 			if('(' == cmd[i])
@@ -294,14 +294,14 @@ void Insert(char *file,char *cmd)
 
 		if(cmd[i+1] != '\"')
 		{
-			printf("´íÎóÃüÁî £¡\n");
+			printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 			return;
 		}
 
 
 		i = i+2;
 		j = 0;
-		// ½âÎöÃüÁî£¬»ñµÃ  id µÄÖµ
+		// è§£æå‘½ä»¤ï¼Œè·å¾—  id çš„å€¼
 		for(i; i< len; i++,j++)
 		{
 			if(cmd[i] == '\"')
@@ -316,7 +316,7 @@ void Insert(char *file,char *cmd)
 		i = i + 3;
 		j = 0;
 
-		// ½âÎöÃüÁî£¬»ñµÃ  name µÄÖµ
+		// è§£æå‘½ä»¤ï¼Œè·å¾—  name çš„å€¼
 		for (i; i< len; i++, j++)
 		{
 			if(cmd[i] == '\"')
@@ -328,18 +328,18 @@ void Insert(char *file,char *cmd)
 			name[j] = cmd[i];
 		}
 		
-		//ÅĞ¶ÏÃüÁîÊÇ·ñ ÒÔ ); ½áÊø
+		//åˆ¤æ–­å‘½ä»¤æ˜¯å¦ ä»¥ ); ç»“æŸ
  		if ((cmd[i+1] != ')') && (cmd[i+1] != ';'))
 		{
-			printf("´íÎóÃüÁî £¡\n");
+			printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 			return;
 		}
 
-		// ´ò¿ªÎÄ¼ş×·¼ÓÒ»Ìõ¼ÇÂ¼
+		// æ‰“å¼€æ–‡ä»¶è¿½åŠ ä¸€æ¡è®°å½•
 		fp = fopen(file,"a+");
 		if (fp)
 		{
-			printf("\n²åÈë³É¹¦\n");
+			printf("\næ’å…¥æˆåŠŸ\n");
 			fprintf(fp, "%s %s\n",id,name);
 
 			fclose(fp);
@@ -348,7 +348,7 @@ void Insert(char *file,char *cmd)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// ²éÕÒ Ö¸¶¨ µÄ name Ïî
+// æŸ¥æ‰¾ æŒ‡å®š çš„ name é¡¹
 void Select11(char * file, char *name1)
 {
 	FILE *fp;
@@ -359,19 +359,19 @@ void Select11(char * file, char *name1)
 
 	strcat(file, ex);
 
-	//³õÊ¼»¯ ÎÄ¼şÖĞµÄ nÊı¾İ
+	//åˆå§‹åŒ– æ–‡ä»¶ä¸­çš„ næ•°æ®
 	InitNameList(file);
 
-	// ½¨Á¢¹şÏ£±í
+	// å»ºç«‹å“ˆå¸Œè¡¨
 	CreateHashList();
 
-	// ²éÕÒ ¼ÇÂ¼
+	// æŸ¥æ‰¾ è®°å½•
 	FindList(name1);
 }
 
 
-///////////////////////////////////////////      ºó  ÆÚ  Ìí  ¼Ó     //////////////////////////////////////
-// ²»ÓÃ¹şÏ£±íÀ´ ²éÕÒ Ö¸¶¨ µÄ name Ïî
+///////////////////////////////////////////      å  æœŸ  æ·»  åŠ      //////////////////////////////////////
+// ä¸ç”¨å“ˆå¸Œè¡¨æ¥ æŸ¥æ‰¾ æŒ‡å®š çš„ name é¡¹
 
 void Select1(char * file, char *name1)
 {
@@ -402,14 +402,14 @@ void Select1(char * file, char *name1)
 	}
 	else
 	{
-		printf("¸Ã±í²»´æÔÚ £¡\n");
+		printf("è¯¥è¡¨ä¸å­˜åœ¨ ï¼\n");
 		return;
 	}
 }
 
 
-///////////////////////////////////////////      ºó  ÆÚ  Ìí  ¼Ó     //////////////////////////////////////
-// ²éÕÒËùÓĞµÄ name Ïî
+///////////////////////////////////////////      å  æœŸ  æ·»  åŠ      //////////////////////////////////////
+// æŸ¥æ‰¾æ‰€æœ‰çš„ name é¡¹
 void Select2(char * file)
 {
 	FILE *fp;
@@ -418,20 +418,20 @@ void Select2(char * file)
 	char name[15] = {0};
 	char id[10] = {0};
 
-	// ¸øÎÊ¼Û¼Óºó×ºÃû
+	// ç»™é—®ä»·åŠ åç¼€å
 	strcat(file, ex);
 
-	// ´ò¿ªÎÄ¼ş
+	// æ‰“å¼€æ–‡ä»¶
 	fp = fopen(file,"r");
 
 	if (fp)
 	{
-		// ¶ÁÈ¡ÎÄ¼şÄÚÈİ
+		// è¯»å–æ–‡ä»¶å†…å®¹
 		while(fscanf(fp, "%s", id) > 0)
 		{
 			fscanf(fp, "%s", name);
 
-			// ´òÓ¡ÎÄ¼şÖĞµÄ¼ÇÂ¼
+			// æ‰“å°æ–‡ä»¶ä¸­çš„è®°å½•
 			printf("%10s%10s\n",id,name);
 	
 		}
@@ -440,45 +440,45 @@ void Select2(char * file)
 	}
 	else
 	{
-		printf("¸Ã±í²»´æÔÚ £¡\n");
+		printf("è¯¥è¡¨ä¸å­˜åœ¨ ï¼\n");
 		return;
 	}
 }
 
 
 //////////////////////////////////////////////////////////////////////////
-// ¸üĞÂÊı¾İ
+// æ›´æ–°æ•°æ®
 void Update(char *file, char *id, char *name)
 {
 
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Ö÷²Ëµ¥
+// ä¸»èœå•
 void Menu()
 {
 	printf("\n");
-	printf(">>>>>>>>´´½¨±í[create]>>>>>>²åÈë¼ÇÂ¼[insert]>>>>>>>²éÑ¯¼ÇÂ¼[select]  \n");
+	printf(">>>>>>>>åˆ›å»ºè¡¨[create]>>>>>>æ’å…¥è®°å½•[insert]>>>>>>>æŸ¥è¯¢è®°å½•[select]  \n");
 	printf("\n");
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Ö÷º¯Êı
+// ä¸»å‡½æ•°
 void main()
 {
-	// ÓÃÀ´±£´æ ×ÜµÄÃüÁî
+	// ç”¨æ¥ä¿å­˜ æ€»çš„å‘½ä»¤
 	char cmd[1024] = {0};
 
-	// ÓÃÀ´±£´æcreate ,insert select ,update 
+	// ç”¨æ¥ä¿å­˜create ,insert select ,update 
 	char cmd1[7] = {0};
 
-	// ÓÃÀ´±£´æÎÄ¼şÃû
+	// ç”¨æ¥ä¿å­˜æ–‡ä»¶å
 	char file[10] = {0};
 
-	// ÓÃÀ´±£´æ name Öµ
+	// ç”¨æ¥ä¿å­˜ name å€¼
 	char name[15] = {0};
 
-	// ÓÃÀ´±£´æ id Öµ
+	// ç”¨æ¥ä¿å­˜ id å€¼
 	char id[10] = {0};
 
 	char table[6] = {0};
@@ -491,8 +491,8 @@ void main()
 	printf("**********       WELCOME TO OUR SQL            *********\n");
 	printf("**********                                     *********\n");
 	printf("**********                                     *********\n");
-	printf("**********       ×é³¤:ÁõÅÎ±ê                   *********\n");
-	printf("**********       ×éÔ±:ºúãÉ£¬Ìï×ÚÁØ£¬ÁõÓÀºã     *********\n");
+	printf("**********       ç»„é•¿:ç”°å®—éœ–                   *********\n");
+	printf("**********       ç»„å‘˜:èƒ¡é—µ...                  *********\n");
 	printf("********************************************************\n");
 
 	int i = 0;
@@ -504,24 +504,24 @@ void main()
 
 		printf("----------------------------------------------------------------------\n");
 
-		// ÊäÈë×ÜµÄÃüÁî
+		// è¾“å…¥æ€»çš„å‘½ä»¤
 		scanf("%s", cmd);
 
-		// ½âÎöÃüÁî£¬»ñµÃ²Ù×÷
+		// è§£æå‘½ä»¤ï¼Œè·å¾—æ“ä½œ
 		for (i = 0; i < 7; i++)
 		{
 			cmd1[i] = cmd[i];
 		}
 
-		// ½âÎöÃüÁî£¬´´½¨±í²Ù×÷
+		// è§£æå‘½ä»¤ï¼Œåˆ›å»ºè¡¨æ“ä½œ
 		if (0 == strcmp(cmd1, "create"))
 		{
 			scanf("%s", table);
 
-			// ÅĞ¶ÏÃüÁîÖĞÊÇ·ñÓĞtable
+			// åˆ¤æ–­å‘½ä»¤ä¸­æ˜¯å¦æœ‰table
 			if (0 != strcmp(table, "table"))
 			{
-				printf("´íÎóÃüÁî £¡\n");
+				printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 				fflush(stdin);
 
 			}
@@ -533,14 +533,14 @@ void main()
 			}
 			
 		}
-		else if (0 == strcmp(cmd1, "insert"))  // ½âÎöÃüÁî£¬²åÈë¼ÇÂ¼²Ù×÷
+		else if (0 == strcmp(cmd1, "insert"))  // è§£æå‘½ä»¤ï¼Œæ’å…¥è®°å½•æ“ä½œ
 		{
 			scanf("%s", table);
 
-			// ÅĞ¶ÏÃüÁîÊÇ·ñÓĞ into
+			// åˆ¤æ–­å‘½ä»¤æ˜¯å¦æœ‰ into
 			if (0 != strcmp(table, "into"))
 			{
-				printf("´íÎóÃüÁî £¡\n");
+				printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 				fflush(stdin);
 
 			}
@@ -552,17 +552,17 @@ void main()
 				
 			}
 		}
-		else if (0 == strcmp(cmd1, "select")) // ½âÎöÃüÁî£¬²éÑ¯¼ÇÂ¼²Ù×÷
+		else if (0 == strcmp(cmd1, "select")) // è§£æå‘½ä»¤ï¼ŒæŸ¥è¯¢è®°å½•æ“ä½œ
 		{
 			scanf("%s", name);
 
-			// ÅĞ¶ÏÃüÁîÖĞÊÇ·ñÓĞ  id
+			// åˆ¤æ–­å‘½ä»¤ä¸­æ˜¯å¦æœ‰  id
 			if(0 == strcmp(name, "id"))
 			{
 				scanf("%s %s",table,file);
 				if (0 != strcmp(table, "from"))
 				{
-					printf("´íÎóÃüÁî £¡\n");
+					printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 					fflush(stdin);
 					continue;
 				}
@@ -572,10 +572,10 @@ void main()
 				
 				scanf("%s %s", temp,temp1);
 
-					// ÅĞ¶ÏÃüÁîÖĞÊÇ·ñÓĞ where name= 
+					// åˆ¤æ–­å‘½ä»¤ä¸­æ˜¯å¦æœ‰ where name= 
 				if ((0 != strcmp(temp,"where")) && (0 != strcmp(temp1,"name=")))
 				{
-					printf("´íÎóÃüÁî £¡\n");
+					printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 					fflush(stdin);
 					continue;
 				}
@@ -584,17 +584,17 @@ void main()
 
 				len = strlen(temp2);
 
-				// ÅĞ¶ÏÊÇ·ñÓĞµ¥ÒıºÅ £¬ÒÔ·ÖºÅ½áÊø
+				// åˆ¤æ–­æ˜¯å¦æœ‰å•å¼•å· ï¼Œä»¥åˆ†å·ç»“æŸ
 				if ((temp2[0] != '\'') && (temp2[len-2] != '\'') && (temp2[len-1] != ';'))
 				{
-					printf("´íÎóÃüÁî £¡\n");
+					printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 					fflush(stdin);
 					continue;
 				}
 
 				temp2[len-2] = '\0';
 
-				// È¥µô·ÖºÅ£¬»ñµÃÍêÕûµÄ name Öµ
+				// å»æ‰åˆ†å·ï¼Œè·å¾—å®Œæ•´çš„ name å€¼
 				for (i = 0; i < len-2; i++)
 				{
 					temp2[i] = temp2[i+1]; 
@@ -603,30 +603,30 @@ void main()
 				Select1(file,temp2);
 				finish = clock();  
 				duration = (double)(finish - start) / CLOCKS_PER_SEC;  
-				printf("Õı³£ºÄÊ± %f seconds\n", duration );  
+				printf("æ­£å¸¸è€—æ—¶ %f seconds\n", duration );  
 			}
-			else if(0 == strcmp(name, "name")) // ÅĞ¶ÏÃüÁîÖĞÊÇ·ñÓĞ name
+			else if(0 == strcmp(name, "name")) // åˆ¤æ–­å‘½ä»¤ä¸­æ˜¯å¦æœ‰ name
 			{
 				scanf("%s %s",table,file);
 				if (0 != strcmp(table, "from"))
 				{
-					printf("´íÎóÃüÁî £¡\n");
+					printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 					fflush(stdin);
 					continue;
 				}
 
 				len = strlen(file);
 
-				// ÅĞ¶ÏÃüÁîÊÇ·ñ ÒÔ £» ½áÊø
+				// åˆ¤æ–­å‘½ä»¤æ˜¯å¦ ä»¥ ï¼› ç»“æŸ
 				if (file[len -1] != ';')
 				{
-					printf("´íÎóÃüÁî £¡\n");
+					printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 					fflush(stdin);
 					continue;
 				}
 				else
 				{
-					// È¥µô·ÖºÅ£¬»ñµÃÍêÕûµÄÎÄ¼şÃû
+					// å»æ‰åˆ†å·ï¼Œè·å¾—å®Œæ•´çš„æ–‡ä»¶å
 					file[len-1] = '\0';
 					Select2(file);
 				}
@@ -634,20 +634,20 @@ void main()
 			}
 			else
 			{
-				printf("´íÎóÃüÁî £¡\n");
+				printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 				fflush(stdin);
 				continue;
 
 			}
 
 		}
-		else if (0 == strcmp(cmd1, "update"))   // ½âÎöÃüÁî£¬¸üĞÂ¼ÇÂ¼²Ù×÷
+		else if (0 == strcmp(cmd1, "update"))   // è§£æå‘½ä»¤ï¼Œæ›´æ–°è®°å½•æ“ä½œ
 		{
 			scanf("%s", file);
 
 			if (0 != strcmp(file, ""))
 			{
-				printf("´íÎóÃüÁî £¡\n");
+				printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 				fflush(stdin);
 				continue;
 			}
@@ -655,10 +655,10 @@ void main()
 			{
 				scanf("%s %s",table,temp);
 
-				// ÅĞ¶ÏÃüÁîÖĞÊÇ·ñÓĞ set id= 
+				// åˆ¤æ–­å‘½ä»¤ä¸­æ˜¯å¦æœ‰ set id= 
 				if ((0 != strcmp(table, "set")) || (0 != strcmp(temp, "id=")))
 				{
-					printf("´íÎóÃüÁî £¡\n");
+					printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 					fflush(stdin);
 					continue;
 				}
@@ -667,10 +667,10 @@ void main()
 
 				len = strlen(id);
 
-				// ÅĞ¶ÏÊÇ·ñÓĞµ¥ÒıºÅ
+				// åˆ¤æ–­æ˜¯å¦æœ‰å•å¼•å·
 				if ((id[0] != '\'') && (id[len-1] != '\''))
 				{
-					printf("´íÎóÃüÁî £¡\n");
+					printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 					fflush(stdin);
 					continue;
 				}
@@ -684,10 +684,10 @@ void main()
 				
 				scanf("%s %s", temp,temp1);
 
-				// ÅĞ¶ÏÃüÁîÖĞÊÇ·ñÓĞ where name= 
+				// åˆ¤æ–­å‘½ä»¤ä¸­æ˜¯å¦æœ‰ where name= 
 				if ((0 != strcmp(temp,"where")) && (0 != strcmp(temp1,"name=")))
 				{
-					printf("´íÎóÃüÁî £¡\n");
+					printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 					fflush(stdin);
 					continue;
 				}
@@ -696,17 +696,17 @@ void main()
 
 				len = strlen(name);
 
-				//ÅĞ¶ÏÃüÁî ÊÇ·ñÒÔ ; ½áÊø
+				//åˆ¤æ–­å‘½ä»¤ æ˜¯å¦ä»¥ ; ç»“æŸ
 				if ((name[0] != '\'') && (name[len-2] != '\'') && (name[len-1] != ';'))
 				{
-					printf("´íÎóÃüÁî £¡\n");
+					printf("é”™è¯¯å‘½ä»¤ ï¼\n");
 					fflush(stdin);
 					continue;
 				}
 
 				name[len-2] = '\0';
 				
-				// È¥µôÒıºÅ ºÍ ·ÖºÅ£¬»ñµÃÍêÕûµÄ name Öµ
+				// å»æ‰å¼•å· å’Œ åˆ†å·ï¼Œè·å¾—å®Œæ•´çš„ name å€¼
 				for (i = 0; i < len-2; i++)
 				{
 					name[i] = name[i+1]; 
@@ -718,7 +718,7 @@ void main()
 		}
 		else
 		{
-			printf("´íÎóÃüÁî \n");
+			printf("é”™è¯¯å‘½ä»¤ \n");
 		}
 		
 
